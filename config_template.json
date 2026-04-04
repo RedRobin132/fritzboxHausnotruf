@@ -1,5 +1,6 @@
 {
   "fritzIP": "0.0.0.0",
   "fritzPW": "test123",
-  "pushsaferApiKey": ""
+  "pushsaferApiKey": "",
+  "emergencyNumber": ""
 }
