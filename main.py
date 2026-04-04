@@ -1,10 +1,18 @@
+import json
+
 import fritzconnection.lib.fritzcall as fritzcall
 import fritzconnection
 import requests
 
-pushsafer_api_key = "PXPCwje8FymJn6CVTCwl"
+with open('config.json') as config_file:
+    config = json.load(config_file)
 
-connection = fritzconnection.FritzConnection("192.168.177.1", password= "inside5630")
+
+pushsafer_api_key = config["pushsaferApiKey"]
+fritzIP = config["fritzIP"]
+fritzPW = config["fritzPW"]
+
+connection = fritzconnection.FritzConnection(address = fritzIP, password = fritzPW)
 
 fc = fritzcall.FritzCall(fc=connection)
 
