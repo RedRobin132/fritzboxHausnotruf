@@ -16,20 +16,19 @@ fritzPW = config["fritzPW"]
 connection = fritzconnection.FritzConnection(address = fritzIP, password = fritzPW)
 
 fc = fritzcall.FritzCall(fc=connection)
+calls = fc.get_calls(days=1)
+last_number_of_calls = len(calls)
 
 
 interval = 10
 while True:
 
     calls = fc.get_calls(days=1)
-    print(len(calls))
+    current_number_of_calls = len(calls)
+    print(current_number_of_calls)
 
-    for call in calls:
+    for i in range(current_number_of_calls-last_number_of_calls):
+        print(calls[i])
 
-        if datetime.datetime.now() - call.date <= datetime.timedelta(seconds=interval+5):
-            print(call)
-        else:
-            break
-
-
+    last_number_of_calls = current_number_of_calls
     time.sleep(interval)
