@@ -1,5 +1,6 @@
 import json
-
+import time
+import datetime
 import fritzconnection.lib.fritzcall as fritzcall
 import fritzconnection
 import requests
@@ -16,9 +17,19 @@ connection = fritzconnection.FritzConnection(address = fritzIP, password = fritz
 
 fc = fritzcall.FritzCall(fc=connection)
 
-calls = fc.get_calls()
-print(len(calls))
-'''
-for call in calls:
-    print(call)
-'''
+
+interval = 10
+while True:
+
+    calls = fc.get_calls(days=1)
+    print(len(calls))
+
+    for call in calls:
+
+        if datetime.datetime.now() - call.date <= datetime.timedelta(seconds=interval+5):
+            print(call)
+        else:
+            break
+
+
+    time.sleep(interval)
