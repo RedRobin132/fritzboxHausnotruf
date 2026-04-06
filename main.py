@@ -35,14 +35,27 @@ else:
     connection = fritzconnection.FritzConnection(address=fritzIP, password=fritzPW, user=fritzUsr)
 
 fc = fritzcall.FritzCall(fc=connection)
-calls = fc.get_calls(days=1)
-last_number_of_calls = len(calls)
-
-
 interval = 10
+
+try:
+    calls = fc.get_calls(days=1)
+    last_number_of_calls = len(calls)
+except Exception as e:
+    last_number_of_calls = 0
+    print(e)
+    interval = 60
+
+
 while True:
 
-    calls = fc.get_calls(days=1)
+    try:
+        calls = fc.get_calls(days=1)
+        interval = 10
+    except Exception as e:
+        calls = []
+        print(e)
+        interval = 60
+
     current_number_of_calls = len(calls)
     print(current_number_of_calls)
 
