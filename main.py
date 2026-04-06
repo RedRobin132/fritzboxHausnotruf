@@ -70,15 +70,7 @@ else:
 fc = fritzcall.FritzCall(fc=connection)
 interval = 10
 
-try:
-    calls = fc.get_calls(days=1)
-    error_status = False
-except Exception as e:
-    fritz_request_error(e)
-    calls = []
-    print(e)
-    interval = 60
-    error_status = True
+process_calls()
 
 last_number_of_calls = len(calls)
 
