@@ -33,6 +33,22 @@ def fritz_request_error(e):
         "pr": 0
     })
 
+def process_calls():
+    global calls, interval, error_status, e
+    try:
+        calls = fc.get_calls(days=1)
+        interval = 10
+        error_status = False
+    except Exception as e:
+        if not error_status:
+            fritz_request_error(e)
+
+        calls = []
+        print(e)
+        interval = 60
+        error_status = True
+
+
 with open('config.json') as config_file:
     config = json.load(config_file)
 
