@@ -10,7 +10,7 @@ def emergency_detected(pushsafer_api_key):
         "k": pushsafer_api_key,
         "t": "Hausnotruf wurde ausgelöst!",
         "m": "Ein Hausnotruf wurde erkannt!",
-        "d": "a",
+        "d": hnr_message_group,
         "s": "2",
         "v": "2",
         "i": "74",
@@ -43,6 +43,8 @@ fritzIP = config["fritzIP"]
 fritzPW = config["fritzPW"]
 fritzUsr = config["fritzUsr"]
 emergency_number = config["emergencyNumber"]
+developer_message_group = config["DeveloperMSG"]
+hnr_message_group = config["HNRGroup"]
 
 if fritzUsr == "":
     connection = fritzconnection.FritzConnection(address = fritzIP, password = fritzPW)
