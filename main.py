@@ -26,9 +26,13 @@ with open('config.json') as config_file:
 pushsafer_api_key = config["pushsaferApiKey"]
 fritzIP = config["fritzIP"]
 fritzPW = config["fritzPW"]
+fritzUsr = config["fritzUsr"]
 emergency_number = config["emergencyNumber"]
 
-connection = fritzconnection.FritzConnection(address = fritzIP, password = fritzPW)
+if fritzUsr == "":
+    connection = fritzconnection.FritzConnection(address = fritzIP, password = fritzPW)
+else:
+    connection = fritzconnection.FritzConnection(address=fritzIP, password=fritzPW, user=fritzUsr)
 
 fc = fritzcall.FritzCall(fc=connection)
 calls = fc.get_calls(days=1)
