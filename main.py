@@ -19,9 +19,24 @@ def emergency_detected(pushsafer_api_key):
         "pr": 2
     })
 
+def fritz_request_error(e):
+    requests.post("https://www.pushsafer.com/api", data={
+        "k": pushsafer_api_key,
+        "t": "Request Error occured!",
+        "m": "There was an error fetching call data.",
+        "d": developer_message_group,
+        "s": "2",
+        "v": "2",
+        "i": "74",
+        "l": "60",
+        "ut": "Website",
+        "pr": 0
+    })
+
 with open('config.json') as config_file:
     config = json.load(config_file)
 
+error_status = False
 
 pushsafer_api_key = config["pushsaferApiKey"]
 fritzIP = config["fritzIP"]
@@ -39,11 +54,15 @@ interval = 10
 
 try:
     calls = fc.get_calls(days=1)
-    last_number_of_calls = len(calls)
+    error_status = False
 except Exception as e:
-    last_number_of_calls = 0
+    fritz_request_error(e)
+    calls = []
     print(e)
     interval = 60
+    error_status = True
+
+last_number_of_calls = len(calls)
 
 
 while True:
@@ -65,3 +84,9 @@ while True:
 
     last_number_of_calls = current_number_of_calls
     time.sleep(interval)
+        interval = 10
+        error_status = False
+        if not error_status:
+            fritz_request_error(e)
+        interval = 60
+        error_status = True
