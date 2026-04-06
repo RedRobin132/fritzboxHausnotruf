@@ -23,7 +23,7 @@ def fritz_request_error(e):
     requests.post("https://www.pushsafer.com/api", data={
         "k": pushsafer_api_key,
         "t": "Request Error occured!",
-        "m": "There was an error fetching call data.",
+        "m": f"There was an error fetching call data.: {e}",
         "d": developer_message_group,
         "s": "2",
         "v": "2",
