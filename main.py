@@ -61,6 +61,14 @@ fritzUsr = config["fritzUsr"]
 emergency_number = config["emergencyNumber"]
 developer_message_group = config["DeveloperMSG"]
 hnr_message_group = config["HNRGroup"]
+isoweekday_test_call = int(config["isoweekdayTestCall"]) #Day of the week, the test call is performed
+
+test_call_time_begin = datetime.datetime.strptime(config["testCallTime"], "%H:%M") #time at wich the test call is performed
+
+test_call_time_begin = datetime.datetime.combine(datetime.date.today(), test_call_time_begin.time())
+
+if time.localtime().tm_isdst == 1:
+    test_call_time_begin = test_call_time_begin + datetime.timedelta(hours=1)
 
 if fritzUsr == "":
     connection = fritzconnection.FritzConnection(address = fritzIP, password = fritzPW)
@@ -75,6 +83,14 @@ last_number_of_calls = len(calls)
 
 
 while True:
+    test_call_time_begin = datetime.datetime.combine(datetime.date.today(), test_call_time_begin.time())    #current day combined with configured time
+
+    if (test_call_time_begin <= datetime.datetime.now() <= (test_call_time_begin + datetime.timedelta(minutes=3))
+            and datetime.datetime.now().isoweekday() == isoweekday_test_call):
+        print("skip testing calls")
+        time.sleep(interval)
+        continue
+
     current_number_of_calls = len(calls)
     print(current_number_of_calls)
 
