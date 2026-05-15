@@ -85,7 +85,7 @@ last_number_of_calls = len(calls)
 while True:
     test_call_time_begin = datetime.datetime.combine(datetime.date.today(), test_call_time_begin.time())    #current day combined with configured time
 
-    if (test_call_time_begin <= datetime.datetime.now() <= (test_call_time_begin + datetime.timedelta(minutes=3))
+    if (test_call_time_begin <= datetime.datetime.now() <= (test_call_time_begin + datetime.timedelta(minutes=5))
             and datetime.datetime.now().isoweekday() == isoweekday_test_call):
         print("skip testing calls")
         time.sleep(interval)
