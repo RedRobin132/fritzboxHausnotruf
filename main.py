@@ -5,13 +5,13 @@ import fritzconnection.lib.fritzcall as fritzcall
 import fritzconnection
 import requests
 
-def emergency_detected(pushsafer_api_key):
+def emergency_detected(pushsafer_api_key, hnr_message_group):
     requests.post("https://www.pushsafer.com/api", data={
         "k": pushsafer_api_key,
         "t": "Hausnotruf wurde ausgelöst!",
         "m": "Ein Hausnotruf wurde erkannt!",
         "d": hnr_message_group,
-        "s": "2",
+        "s": "0",
         "v": "2",
         "i": "74",
         "l": "60",
@@ -80,7 +80,6 @@ fc = fritzcall.FritzCall(fc=connection)
 process_calls()
 
 last_number_of_calls = len(calls)
-
 
 while True:
     test_call_time_begin = datetime.datetime.combine(datetime.date.today(), test_call_time_begin.time())    #current day combined with configured time
