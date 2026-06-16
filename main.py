@@ -81,21 +81,35 @@ process_calls()
 
 last_number_of_calls = len(calls)
 
+consecutive_calls = 0
+
 while True:
     test_call_time_begin = datetime.datetime.combine(datetime.date.today(), test_call_time_begin.time())    #current day combined with configured time
 
-    if (test_call_time_begin <= datetime.datetime.now() <= (test_call_time_begin + datetime.timedelta(minutes=5))
-            and datetime.datetime.now().isoweekday() == isoweekday_test_call):
-        print("skip testing calls")
-        time.sleep(interval)
-        continue
 
     current_number_of_calls = len(calls)
     print(current_number_of_calls)
 
-    for i in range(current_number_of_calls-last_number_of_calls):
+    if not( (test_call_time_begin <= datetime.datetime.now() <= (test_call_time_begin + datetime.timedelta(minutes=5))
+            and datetime.datetime.now().isoweekday() == isoweekday_test_call) ):
+        consecutive_calls = 0
+
+    for i in range(current_number_of_calls-last_number_of_calls):   #nur neue Anrufe
         if calls[i].Called == emergency_number:
-            emergency_detected(pushsafer_api_key)
+            if (test_call_time_begin <= datetime.datetime.now() <= (test_call_time_begin + datetime.timedelta(minutes=5))   #wenn innerhalb des Testzeitraums
+                    and datetime.datetime.now().isoweekday() == isoweekday_test_call):
+                print("skip testing calls")
+                consecutive_calls += 1
+
+                if consecutive_calls >= 2:
+                    emergency_detected(pushsafer_api_key, hnr_message_group)
+
+            else:
+                consecutive_calls = 0
+                emergency_detected(pushsafer_api_key, hnr_message_group)
+
+
+
 
     last_number_of_calls = current_number_of_calls
     time.sleep(interval)
