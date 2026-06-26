@@ -79,23 +79,23 @@ fc = fritzcall.FritzCall(fc=connection)
 
 process_calls()
 
-last_number_of_calls = len(calls)
+last_call_time = calls[0].Date if calls else None
 
 consecutive_calls = 0
 
 while True:
     test_call_time_begin = datetime.datetime.combine(datetime.date.today(), test_call_time_begin.time())    #current day combined with configured time
 
-
-    current_number_of_calls = len(calls)
-    print(current_number_of_calls)
+    print(len(calls))
 
     if not( (test_call_time_begin <= datetime.datetime.now() <= (test_call_time_begin + datetime.timedelta(minutes=5))
             and datetime.datetime.now().isoweekday() == isoweekday_test_call) ):
         consecutive_calls = 0
 
-    for i in range(current_number_of_calls-last_number_of_calls):   #nur neue Anrufe
-        if calls[i].Called == emergency_number:
+    for call in calls:
+        if last_call_time is not None and call.Date <= last_call_time:
+            break
+        if call.Called == emergency_number:
             if (test_call_time_begin <= datetime.datetime.now() <= (test_call_time_begin + datetime.timedelta(minutes=5))   #wenn innerhalb des Testzeitraums
                     and datetime.datetime.now().isoweekday() == isoweekday_test_call):
                 print("skip testing calls")
@@ -108,10 +108,7 @@ while True:
                 consecutive_calls = 0
                 emergency_detected(pushsafer_api_key, hnr_message_group)
 
-
-
-
-    last_number_of_calls = current_number_of_calls
+    last_call_time = calls[0].Date if calls else last_call_time
     time.sleep(interval)
 
     process_calls()
